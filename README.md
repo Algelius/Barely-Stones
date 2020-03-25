@@ -1,7 +1,3 @@
 # Barely Stones
- 
 
-
-
-ossian jobbar bra på detta projectet
-Alfred också jag vet ejvad jag gör
+Barely Stones is a 1 player Tactical RPG being developed in Unity.
