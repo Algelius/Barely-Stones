@@ -9,8 +9,16 @@ public class TileGridScript : MonoBehaviour
 
     //Jag tänker att denna klassen kan innehålla metoder för att selecta en area av 
 
-        //ha ett child-gameobject som är ett osynligt plan som ligger precis i nivå med tilesen. Det kollar kontinuerligt var musen träffar
-        //planet från kamerans syn och highlitar tiles. 
+    //ha ett child-gameobject som är ett osynligt plan som ligger precis i nivå med tilesen. Det kollar kontinuerligt var musen träffar
+    //planet från kamerans syn och highlitar tiles. 
+
+    private Camera gameCamera;
+
+    void Start()
+    {
+        //hitta gameCamera m.h.a. tag.
+        
+    }
 
 
     /// <summary>
@@ -28,18 +36,27 @@ public class TileGridScript : MonoBehaviour
                 Vector2 childPos = new Vector2(child.position.x, child.position.z);
                 if(childPos.x > TileArray.GetLength(0))
                 {
-
+                    ResizeTileArray();
                 }
-
-
+                TileArray[(int)childPos.x, (int)childPos.y] = child.gameObject;
+                child.GetComponent<TileScript>().Activate();
             }
         }
-
     }
 
     private void ResizeTileArray()//skapa ny temporär längre array, läs över data, 
     {
+        GameObject[,] tempTileArray = new GameObject[TileArray.GetLength(0) * 2, TileArray.GetLength(1) * 2];
 
+        for(int i = 0; i<TileArray.GetLength(0);i++)
+        {
+            for(int j = 0; j < TileArray.GetLength(1); j++)
+            {
+                tempTileArray[i, j] = TileArray[i, j];
+            }
+        }
+
+        TileArray = tempTileArray;
     }
 
     /// <summary>
@@ -77,8 +94,11 @@ public class TileGridScript : MonoBehaviour
         return null;
     }
 
+
     void Update()
     {
-        
+        //Kanske temporärt ha en if(active) kolla med en raycast om den träffar nån tile, den tilen highlightas isåfall.
+
+
     }
 }
