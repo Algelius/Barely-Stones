@@ -27,7 +27,8 @@ public class TileScript : MonoBehaviour
     
     //förälders tilescript
     public TileGridScript grid;
-    
+    //används för att veta sin position i TileGrids rutnät. borde än så länge bara vara dess position relativt till tilegrid.
+    public Vector2 Gridposition;
 
     void Start()
     {
@@ -36,6 +37,11 @@ public class TileScript : MonoBehaviour
         highlightedRenderer = transform.GetChild(0).GetComponent<MeshRenderer>();
 
         Activate();
+
+
+        //FULGREJ, borde egentligen få gridposition av TileGrid, då vi kanske implementerar
+        //en gridförskjutning så att grid kan finnas på mindre koordinater än 0,0
+        Gridposition = new Vector2(transform.position.x,transform.position.z);
     }
 
 
