@@ -7,13 +7,18 @@ public class TileGridScript : MonoBehaviour
     private GameObject[,] TileArray;//index i denna ska alltid vara deras verkliga position. Använd därför bara heltal som position på tiles
 
 
-    //Jag tänker att denna klassen kan innehålla metoder för att selecta en area av 
-
-    //ha ett child-gameobject som är ett osynligt plan som ligger precis i nivå med tilesen. Det kollar kontinuerligt var musen träffar
-    //planet från kamerans syn och highlitar tiles. 
+    //Jag tänker att denna klassen kan innehålla metoder för att selecta en area av tiles
+    
 
 
     RaycastHit mouseRaycast;
+
+
+    #region testbools
+    public bool demoSelectMany = false;
+
+    public bool highlightMouseOver = true;
+    #endregion
 
     void Start()
     {
@@ -66,6 +71,13 @@ public class TileGridScript : MonoBehaviour
     /// <returns>Returns a Gameobject with tag = Tile. \n Returns null if no tile was found</returns>
     public GameObject GetTileAt(Vector2 pos)
     {
+        pos.x = Mathf.RoundToInt(pos.x);
+        pos.y = Mathf.RoundToInt(pos.y);
+
+        if (pos.x >= 0 && pos.y >= 0 && pos.x < TileArray.GetLength(0) && pos.y < TileArray.GetLength(1))
+        {
+            return TileArray[(int)pos.x, (int)pos.y];
+        }
 
 
         return null;
@@ -78,7 +90,35 @@ public class TileGridScript : MonoBehaviour
     /// <returns>If a tile exists this will return one</returns>
     public GameObject SnapToTile(Vector2 pos)
     {
-        return null;
+        //FINNS PLATS FÖR SERIÖS OPTIMERING TROR JAG.
+        //Just nu går den igenom alla tiles och jämför avstånd.
+        GameObject returnTile = GetTileAt(pos);
+
+        if (returnTile!=null)
+        {
+            return GetTileAt(pos);
+        }
+
+        float distanceToCurrent = 10f;
+        float distanceToReturnTile = 10f;
+        foreach(GameObject tile in TileArray)
+        {
+            if (tile != null)
+            {
+                if (returnTile == null)
+                    returnTile = tile;
+
+                distanceToCurrent = Vector2.Distance(pos, new Vector2(tile.transform.position.x, tile.transform.position.z));
+                distanceToReturnTile = Vector2.Distance(pos, new Vector2(returnTile.transform.position.x, returnTile.transform.position.z));
+
+
+                if (distanceToCurrent < distanceToReturnTile)
+                    returnTile = tile;
+            }
+        }
+        
+
+        return returnTile;
     }
 
     /// <summary>
@@ -122,14 +162,19 @@ public class TileGridScript : MonoBehaviour
 
         if (mouseRaycast.collider != null&&mouseRaycast.collider.tag == "Tile")
         {
-            mouseRaycast.collider.GetComponent<TileScript>().Highlight();
 
+            if(highlightMouseOver)
+                mouseRaycast.collider.GetComponent<TileScript>().Highlight();
 
-            for(int i= 0; i < 4; i++)//Mest för test
+            //mest för demo kanske
+            if (demoSelectMany)
             {
-                if(GetAdjacentTile(mouseRaycast.collider.gameObject, i) != null)
+                for(int i= 0; i < 4; i++)//Mest för test
                 {
-                    GetAdjacentTile(mouseRaycast.collider.gameObject, i).GetComponent<TileScript>().Highlight();
+                    if(GetAdjacentTile(mouseRaycast.collider.gameObject, i) != null)
+                    {
+                        GetAdjacentTile(mouseRaycast.collider.gameObject, i).GetComponent<TileScript>().Highlight();
+                    }
                 }
             }
         }

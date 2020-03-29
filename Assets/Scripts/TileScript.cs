@@ -50,16 +50,12 @@ public class TileScript : MonoBehaviour
         normalRenderer.enabled = true;
         highlightedRenderer.enabled = false;
         isActive = true;
-
-        Debug.Log("Tile Activated");
     }
     public void Inactivate()
     {
         normalRenderer.enabled = false;
         highlightedRenderer.enabled = false;
         isActive = false;
-
-        Debug.Log("Tile Inactivated");
     }
 
 
@@ -78,8 +74,6 @@ public class TileScript : MonoBehaviour
             {
                 highlightedRenderer.enabled = true;
                 normalRenderer.enabled = false;
-
-                Debug.Log("Highlighted tile");
             }
             else if (!highlighted && !highlightedLastUpdate)
             {

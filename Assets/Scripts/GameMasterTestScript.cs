@@ -7,10 +7,12 @@ public class GameMasterTestScript : MonoBehaviour
 
 
     GameObject TileGrid;
+    TileGridScript GridScript;
 
     void Start()
     {
         TileGrid = GameObject.FindGameObjectWithTag("TileGrid");
+        GridScript = TileGrid.GetComponent<TileGridScript>();
     }
 
     bool done = false;
@@ -19,8 +21,11 @@ public class GameMasterTestScript : MonoBehaviour
     {
         if (!done)
         {
-            TileGrid.GetComponent<TileGridScript>().Initialize();
+            GridScript.Initialize();
             done = true;
         }
+
+        GridScript.SnapToTile(new Vector2(transform.position.x, transform.position.z)).GetComponent<TileScript>().Highlight();
+
     }
 }
