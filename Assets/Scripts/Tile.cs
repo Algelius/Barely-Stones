@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
-public class TileScript : MonoBehaviour
+public class Tile : MonoBehaviour
 {
     //Ska veta vilken GameEntity som står ovanpå den just nu, GameEntityn ska samtidigt veta vilken ruta den står på.
     //Kanske ha att dennas collider känner av gameEntityns collider och säger åt båda.
@@ -16,34 +15,40 @@ public class TileScript : MonoBehaviour
 
     //eller om aktiv känna av om man musar över den.
 
+    [SerializeField] MeshRenderer normalRenderer;
+    [SerializeField] MeshRenderer highlightedRenderer;
 
-    MeshRenderer normalRenderer;
-    MeshRenderer highlightedRenderer;
-    
+    public Tile myParentTile = null;
+    public int myGCost = 0;
+    public int myHCost = 0;
+    public int myFCost { get { return myGCost + myHCost; } }
+
     bool highlightedLastUpdate = false;
     bool highlighted = false;
 
     bool isActive = true;
-    
+
     //förälders tilescript
-    public TileGridScript grid;
+    public TileGrid grid;
     //används för att veta sin position i TileGrids rutnät. borde än så länge bara vara dess position relativt till tilegrid.
-    public Vector2 Gridposition;
+    public Vector2Int gridPosition;
 
     void Start()
     {
-        grid = transform.GetComponentInParent<TileGridScript>();
-        normalRenderer = GetComponent<MeshRenderer>();
-        highlightedRenderer = transform.GetChild(0).GetComponent<MeshRenderer>();
+        grid = transform.GetComponentInParent<TileGrid>();
 
         Activate();
 
 
         //FULGREJ, borde egentligen få gridposition av TileGrid, då vi kanske implementerar
         //en gridförskjutning så att grid kan finnas på mindre koordinater än 0,0
-        Gridposition = new Vector2(transform.position.x,transform.position.z);
+        gridPosition = new Vector2Int((int)transform.position.x, (int)transform.position.z);
     }
 
+    public void SetColor(Color aColor)
+    {
+        normalRenderer.material.color = aColor;
+    }
 
     public void Activate()
     {
@@ -53,6 +58,7 @@ public class TileScript : MonoBehaviour
 
         Debug.Log("Tile Activated");
     }
+
     public void Inactivate()
     {
         normalRenderer.enabled = false;
@@ -62,11 +68,9 @@ public class TileScript : MonoBehaviour
         Debug.Log("Tile Inactivated");
     }
 
-
     public void Highlight()//kalla varje cykel som du vill att den ska vara highlightad.
     {
         highlighted = true;
-
     }
 
     // Update is called once per frame
@@ -81,6 +85,7 @@ public class TileScript : MonoBehaviour
 
                 Debug.Log("Highlighted tile");
             }
+
             else if (!highlighted && !highlightedLastUpdate)
             {
                 highlightedRenderer.enabled = false;
