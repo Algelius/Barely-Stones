@@ -2396,7 +2396,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 038ae0eea777e8a4f9fea7da87c32b9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myPathfinder: {fileID: 0}
+  myPathfinder: {fileID: 2030053871}
   myPath: []
 --- !u!1001 &773344879
 PrefabInstance:
@@ -7874,6 +7874,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 814486916}
     m_Modifications:
+    - target: {fileID: 1164042882879530485, guid: 9f013610157cf0749b842f85edf925b5,
+        type: 3}
+      propertyPath: arraySize.x
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 1164042882879530485, guid: 9f013610157cf0749b842f85edf925b5,
+        type: 3}
+      propertyPath: arraySize.y
+      value: 200
+      objectReference: {fileID: 0}
     - target: {fileID: 7292543001184582663, guid: 9f013610157cf0749b842f85edf925b5,
         type: 3}
       propertyPath: m_LocalPosition.x

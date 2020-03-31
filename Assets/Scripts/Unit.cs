@@ -10,6 +10,7 @@ public class Unit : MonoBehaviour
 
     protected Transform targetTile;
     protected int currentNode = 0;
+    float moveSpeed = 3;
 
     private void Start()
     {
@@ -26,7 +27,7 @@ public class Unit : MonoBehaviour
         }
 
         Vector3 direction = targetTile.position - transform.position;
-        float distPerFrame = Time.deltaTime;
+        float distPerFrame = Time.deltaTime * moveSpeed;
 
         if (direction.magnitude <= distPerFrame)
         {

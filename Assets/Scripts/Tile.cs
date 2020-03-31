@@ -39,15 +39,9 @@ public class Tile : MonoBehaviour
 
         Activate();
 
-
         //FULGREJ, borde egentligen få gridposition av TileGrid, då vi kanske implementerar
         //en gridförskjutning så att grid kan finnas på mindre koordinater än 0,0
         gridPosition = new Vector2Int((int)transform.position.x, (int)transform.position.z);
-    }
-
-    public void SetColor(Color aColor)
-    {
-        normalRenderer.material.color = aColor;
     }
 
     public void Activate()
@@ -55,8 +49,6 @@ public class Tile : MonoBehaviour
         normalRenderer.enabled = true;
         highlightedRenderer.enabled = false;
         isActive = true;
-
-        Debug.Log("Tile Activated");
     }
 
     public void Inactivate()
@@ -64,8 +56,6 @@ public class Tile : MonoBehaviour
         normalRenderer.enabled = false;
         highlightedRenderer.enabled = false;
         isActive = false;
-
-        Debug.Log("Tile Inactivated");
     }
 
     public void Highlight()//kalla varje cykel som du vill att den ska vara highlightad.
@@ -82,8 +72,6 @@ public class Tile : MonoBehaviour
             {
                 highlightedRenderer.enabled = true;
                 normalRenderer.enabled = false;
-
-                Debug.Log("Highlighted tile");
             }
 
             else if (!highlighted && !highlightedLastUpdate)
