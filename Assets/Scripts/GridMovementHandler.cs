@@ -16,6 +16,9 @@ public class GridMovementHandler : MonoBehaviour
     Unit[] unitsToMove;
     Enemy[] enemies;
 
+    bool isAttacking = false;
+    List<Tile> enemyTiles;
+
     void Awake()
     {
         pathfinding = FindObjectOfType<Pathfinding>();
@@ -30,38 +33,67 @@ public class GridMovementHandler : MonoBehaviour
         Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
         Physics.Raycast(mouseRay, out mouseRaycast, LayerMask.GetMask("TileLayer"));
 
-        if (mouseRaycast.collider != null && mouseRaycast.collider.GetComponent<Tile>() != null)
+        if (isAttacking)
         {
-            Tile tileHit = mouseRaycast.collider.GetComponent<Tile>();
-
-            tileHit.Highlight();
-
-            if (Input.GetMouseButtonDown(1) && selectedUnit != null)
+            for (int i = 0; i < enemyTiles.Count; i++)
             {
-                for (int i = 0; i < unitsToMove.Length; i++)
+                enemyTiles[i].Highlight();
+            }
+
+            if (mouseRaycast.collider != null && mouseRaycast.collider.GetComponent<Tile>() != null)
+            {
+                Tile tileHit = mouseRaycast.collider.GetComponent<Tile>();
+
+                if (Input.GetMouseButtonDown(0) && selectedUnit != null)
                 {
-                    if (selectedUnit == unitsToMove[i])
+                    for (int j = 0; j < enemies.Length; j++)
                     {
-                        unitsToMove[i] = null;
-                        selectedUnit.FindPath(tileHit, pathfinding);
+                        if (enemies[j].CurrentTile == tileHit)
+                        {
+                            Debug.Log(string.Format("Attacked {0}", enemies[j].name));
+                        }
                     }
+
+                    isAttacking = false;
                 }
             }
         }
 
-        if (mouseRaycast.collider != null && mouseRaycast.collider.GetComponent<Unit>() != null)
+        else
         {
-            Unit unitHit = mouseRaycast.collider.GetComponent<Unit>();
-
-            if (Input.GetMouseButtonDown(0))
+            if (mouseRaycast.collider != null && mouseRaycast.collider.GetComponent<Tile>() != null)
             {
-                if (selectedUnit != null)
-                {
-                    selectedUnit.GetComponentInChildren<Renderer>().material = unitMat;
-                }
+                Tile tileHit = mouseRaycast.collider.GetComponent<Tile>();
 
-                selectedUnit = unitHit;
-                selectedUnit.GetComponentInChildren<Renderer>().material = unitHighlightMat;
+                tileHit.Highlight();
+
+                if (Input.GetMouseButtonDown(1) && selectedUnit != null)
+                {
+                    for (int i = 0; i < unitsToMove.Length; i++)
+                    {
+                        if (selectedUnit == unitsToMove[i])
+                        {
+                            unitsToMove[i] = null;
+                            selectedUnit.FindPath(tileHit, pathfinding);
+                        }
+                    }
+                }
+            }
+
+            if (mouseRaycast.collider != null && mouseRaycast.collider.GetComponent<Unit>() != null)
+            {
+                Unit unitHit = mouseRaycast.collider.GetComponent<Unit>();
+
+                if (Input.GetMouseButtonDown(0))
+                {
+                    if (selectedUnit != null)
+                    {
+                        selectedUnit.GetComponentInChildren<Renderer>().material = unitMat;
+                    }
+
+                    selectedUnit = unitHit;
+                    selectedUnit.GetComponentInChildren<Renderer>().material = unitHighlightMat;
+                }
             }
         }
     }
@@ -73,6 +105,8 @@ public class GridMovementHandler : MonoBehaviour
 
     public void Attack()
     {
+        enemyTiles = new List<Tile>();
+
         Tile[] adjacentTiles = tileGrid.GetAdjacentTiles(selectedUnit.CurrentTile);
 
         for (int i = 0; i < enemies.Length; i++)
@@ -81,9 +115,14 @@ public class GridMovementHandler : MonoBehaviour
             {
                 if (enemies[i].CurrentTile == adjacentTiles[j])
                 {
-                    Debug.Log(string.Format("Attacked {0}", enemies[i].name));
+                    enemyTiles.Add(enemies[i].CurrentTile);
                 }
             }
+        }
+
+        if (enemyTiles.Count > 0)
+        {
+            isAttacking = true;
         }
     }
 }
