@@ -6,7 +6,7 @@ using UnityEngine;
 //Executar bara i editorn, lägg dessa på tiles så kan de 
 
 [ExecuteInEditMode]
-public class SnapToGridScript : MonoBehaviour
+public class SnapToGrid : MonoBehaviour
 {
 #if UNITY_EDITOR
     public bool snapToGrid = true;
@@ -37,4 +37,3 @@ public class SnapToGridScript : MonoBehaviour
     }
 #endif
 }
-
